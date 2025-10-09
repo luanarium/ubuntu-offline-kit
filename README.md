@@ -1,8 +1,7 @@
 # 🖥️ Offline Ubuntu + Python Package Archive
 
 ---
-
-This guide explains how to create a portable, offline-ready archive of Ubuntu system packages and Python libraries. It shows how to preserve APT caches to build a local repository of `.deb` packages, and how to download Python packages using `pip` with a `requirements.txt` file. Using these archives, you can reinstall software or set up new systems without Internet access, either directly from local storage or over a LAN/USB.
+This guide explains how to create a portable, offline-ready archive of Ubuntu system packages and Python libraries.
 --- 
 
 ## 1. Persist APT Cache
