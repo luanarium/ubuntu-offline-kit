@@ -1,7 +1,6 @@
 # Ubuntu-offline-kit
 
-This guide explains how to create a portable, offline-ready archive of Ubuntu system packages and Python libraries.
---- 
+A portable, offline-ready archive of Ubuntu system packages and Python libraries.
 
 ## 1. Persist APT Cache
 
