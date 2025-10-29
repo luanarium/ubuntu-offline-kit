@@ -35,41 +35,56 @@ sudo apt install vim htop
 
 ## 3. Archive pip Packages
 
-Create `requirements.txt` listing desired packages, e.g.:
+**1. Create virtual environment**
 
-```text
+```bash
+python3 -m venv ~/offline-env
+source ~/offline-env/bin/activate
+```
+
+**2. Create `requirements.txt`**
+
+```
 flask
 requests>=2.30
 numpy==1.26.4
 ```
 
-Or from an existing environment:
+**3. Download packages + dependencies into archive**
 
 ```bash
-pip freeze > requirements.txt
+mkdir -p ~/offline-env/pip-archive
+pip download -r requirements.txt -d ~/offline-env/pip-archive --only-binary=:all:
 ```
 
-Download packages:
+**4. Install packages from local archive**
 
 ```bash
-mkdir ~/pip-archive
-pip download -r requirements.txt -d ~/pip-archive
+pip install --no-index --find-links ~/offline-env/pip-archive -r requirements.txt
 ```
 
-Offline install:
+**5. (Optional) Serve archive to LAN clients**
 
 ```bash
-pip install --no-index --find-links ~/pip-archive -r requirements.txt
+cd ~/offline-env/pip-archive
+python3 -m http.server 8080
 ```
 
-Optional LAN server:
+Clients:
 
 ```bash
-python3 -m http.server 8080 --directory ~/pip-archive
+pip install --no-index --find-links http://<server-ip>:8080 -r requirements.txt
 ```
 
-Use `--find-links http://server-ip:8080` on clients.
+**6. Make the environment relocatable**
+- Do this after the environment is finalized and ready to be shared.
+
+```bash
+pip install virtualenv
+virtualenv --relocatable ~/offline-env
+```
 
 ---
 
-**Result:** fully offline-ready APT + pip repository for system + Python packages.
+⚠️ **Caveat:**  
+Pure-Python wheels are fully portable. Packages with **C extensions or compiled libraries** (e.g. `numpy`, `pandas`, `lxml`) depend on the target system’s ABI and architecture. These must match (e.g., same Ubuntu version and Python build) for the environment to remain functional offline.
