@@ -1,6 +1,4 @@
 # 🖥️ Offline Ubuntu + Python Package Archive
-
----
 This guide explains how to create a portable, offline-ready archive of Ubuntu system packages and Python libraries.
 --- 
 
