@@ -2,6 +2,8 @@
 
 A portable, offline-ready archive of Ubuntu system packages and Python libraries.
 
+## DISCLAIMER: The strategies and code described here are provided "AS IS" without warranty of any kind. The author assumes no responsibility for any consequences of their use.
+
 ## 1. Persist APT Cache
 
 ```bash
