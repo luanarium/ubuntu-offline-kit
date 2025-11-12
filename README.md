@@ -1,6 +1,6 @@
 # Ubuntu-offline-kit
 
-(See apt_archive.md)[apt_archive.md]
+[See apt_archive.md](apt_archive.md)
 
 ---
 
