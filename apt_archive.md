@@ -76,6 +76,17 @@ alias packiso='genisoimage -o myrepo_$(date +%Y%m%d).iso -R -J project' # make i
 alias pack='sudo cp -u /var/cache/apt/archives/*.deb /opt/myrepo/'
 alias offline='sudo apt-get install --download-only'
 ```
+## This alias checks if 'Packages' and 'Packages.gz' files exist, have codrect case, Packages isn't empty, and checks for correct permisisons.
+
+```bash
+alias checkrepo='[ -d /opt/myrepo ] && {
+  find /opt/myrepo \( -type d ! -perm -a+rx -o -type f ! -perm -a+r \) | grep . && echo "⚠️ permission issue(s)";
+  [ ! -f /opt/myrepo/Packages ] && echo "⚠️ Packages missing";
+  [ ! -f /opt/myrepo/Packages.gz ] && echo "⚠️ Packages.gz missing";
+  [ -f /opt/myrepo/Packages ] && [ ! -s /opt/myrepo/Packages ] && echo "⚠️ Packages empty";
+} || echo "⚠️ /opt/myrepo missing"'
+```
+
 ## Usage examples:
 
 ## rebuild package index in /opt/myrepo
