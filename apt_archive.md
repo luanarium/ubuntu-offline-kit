@@ -28,7 +28,7 @@ cat Packages
 sudo rm -rf /opt/myrepo/*
 ```
 
-## 6. Ensure permissions are correct. Do this for for Packges and Packages.gz each time you rebuild them.
+## 6. Ensure permissions are correct. Do this for Packges and Packages.gz each time you rebuild them.
 ```bash
 sudo chmod a+r /opt/myrepo/*.deb
 sudo chmod a+r /opt/myrepo/Packages /opt/myrepo/Packages.gz
