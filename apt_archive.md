@@ -6,7 +6,7 @@ sudo mkdir /opt
 sudo mkdir /opt/myrepo
 ```
 
-## 2. Download packages into /var/cache/apt/archives/ and move to /opt/myrepo
+## 2. Download packages and move to /opt/myrepo
 ```bash
 sudo apt-get install [package] --download-only
 sudo cp -u /var/cache/apt/archives/*.deb /opt/myrepo/
