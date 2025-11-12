@@ -79,12 +79,11 @@ alias offline='sudo apt-get install --download-only'
 ## This alias checks if 'Packages' and 'Packages.gz' files exist, have correct case, Packages isn't empty, and checks for correct permisisons.
 
 ```bash
-alias checkrepo='[ -d /opt/myrepo ] && {
-  find /opt/myrepo \( -type d ! -perm -a+rx -o -type f ! -perm -a+r \) | grep . && echo "⚠️ permission issue(s)";
-  [ ! -f /opt/myrepo/Packages ] && echo "⚠️ Packages missing";
-  [ ! -f /opt/myrepo/Packages.gz ] && echo "⚠️ Packages.gz missing";
-  [ -f /opt/myrepo/Packages ] && [ ! -s /opt/myrepo/Packages ] && echo "⚠️ Packages empty";
-} || echo "⚠️ /opt/myrepo missing"'
+alias checkrepo='[ -d /opt/myrepo ] || { echo "⚠️ /opt/myrepo missing"; exit 1; };
+find /opt/myrepo \( -type d ! -perm -a+rx -o -type f ! -perm -a+r -o ! -user root -o ! -group root \) | grep . && echo "⚠️ permission or ownership issue(s)";
+[ ! -f /opt/myrepo/Packages ] && echo "⚠️ Packages missing";
+[ ! -f /opt/myrepo/Packages.gz ] && echo "⚠️ Packages.gz missing";
+[ -f /opt/myrepo/Packages ] && [ ! -s /opt/myrepo/Packages ] && echo "⚠️ Packages empty"'
 ```
 
 ## Usage examples:
