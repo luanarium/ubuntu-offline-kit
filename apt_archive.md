@@ -47,9 +47,9 @@ sudo apt update
 tar czf myrepo_$(date +%Y%m%d).tar.gz -C / opt/myrepo
 ```
 
-## 9. Put your gzip archive into a project directory with any other files you'd like accessible in your offline machine. Then build your iso
+## 9. Put your gzip archive into a project directory (e.g. project) with any other files you'd like accessible in your offline machine. Then build your iso
 ```bash
-genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /path/to/project
+genisoimage -o myrepo_$(date +%Y%m%d).iso -R -J project
 ```
 
 ## 10. On your target machine, create your directories, extract your archive, set permissions, add your repo, then apt update
@@ -72,7 +72,7 @@ I encountered a problem with two dependencies for VLC and discovered the issue w
 ```bash
 alias rebuildrepo='sudo dpkg-scanpackages . /dev/null | sudo tee Packages > /dev/null && sudo dpkg-scanpackages . /dev/null | gzip -9c | sudo tee Packages.gz > /dev/null'
 alias upgrades='sudo apt-get --download-only upgrade -y' # download packages for first update after installing ubuntu
-alias packiso='genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /project' # make iso containing myrepo.gz
+alias packiso='genisoimage -o myrepo_$(date +%Y%m%d).iso -R -J project' # make iso containing myrepo.gz
 alias pack='sudo cp -u /var/cache/apt/archives/*.deb /opt/myrepo/'
 alias offline='sudo apt-get install --download-only'
 ```
