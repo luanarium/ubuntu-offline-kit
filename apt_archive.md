@@ -66,7 +66,7 @@ sudo apt update
 ```
 
 ## Notes
-I encountered a problem with two dependencies for VLC and discovered the issue was that I had both the amd64 and i368 versions of these packages. The solution was to delete the i368 versions and keep only the packages for amd64, as my architecture is amd64.
+I encountered a problem with two dependencies for VLC and discovered the issue was that I had both the amd64 and i368 versions of these packages. The solution was to delete the i368 versions and keep only the packages for amd64, as my architecture is amd64. Then rebuild my index.
 
 ## Aliases: Add these to your ~/.bashrc
 ```bash
