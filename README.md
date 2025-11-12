@@ -1,16 +1,6 @@
 # Ubuntu-offline-kit
 
-A portable, offline-ready archive of Ubuntu system packages and Python libraries.
-
-DISCLAIMER: The strategies and code described here are provided "AS IS" without warranty of any kind. The author assumes no responsibility for any consequences of their use.
-
-## 1. Persist APT Cache
-
-```bash
-echo 'APT::Clean-Installed "false";' | sudo tee /etc/apt/apt.conf.d/02noclean
-```
-
-Install packages normally — cached `.deb`s stay in `/var/cache/apt/archives/`.
+(See apt_archive.md)[apt_archive.md]
 
 ---
 
