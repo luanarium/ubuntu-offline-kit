@@ -12,7 +12,7 @@ sudo apt-get install [package] --download-only
 sudo cp -u /var/cache/apt/archives/*.deb /opt/myrepo/
 ```
 
-## 3. Build indexs for your repo. Packages and Packages.gz must be capitalized
+## 3. Build indexes for your repo. Packages and Packages.gz must be capitalized
 ```bash
 sudo dpkg-scanpackages . /dev/null | sudo tee Packages > /dev/null
 sudo dpkg-scanpackages . /dev/null | gzip -9c | sudo tee Packages.gz > /dev/null
