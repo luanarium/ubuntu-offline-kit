@@ -2,28 +2,7 @@
 
 [See apt_archive.md](apt_archive.md)
 
----
-
-## 2. Archive APT Packages
-
-```bash
-mkdir -p /srv/myrepo
-cp /var/cache/apt/archives/*.deb /srv/myrepo/
-cd /srv/myrepo
-dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz
-```
-
-Offline use:
-
-```
-deb [trusted=yes] file:///srv/myrepo ./
-sudo apt update
-sudo apt install vim htop
-```
-
----
-
-## 3. Archive pip Packages
+## Archive pip Packages
 
 **1. Create virtual environment**
 
