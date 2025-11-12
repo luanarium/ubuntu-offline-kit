@@ -28,7 +28,7 @@ cat Packages
 sudo rm -rf /opt/myrepo/*
 ```
 
-## 6. Ensure permissions are correct. Do this for Packges and Packages.gz each time you rebuild them.
+## 6. Ensure permissions are correct. Do this for Packges and Packages.gz each time you rebuild them
 ```bash
 sudo chmod a+r /opt/myrepo/*.deb
 sudo chmod a+r /opt/myrepo/Packages /opt/myrepo/Packages.gz
@@ -36,23 +36,23 @@ sudo chown -R root:root /opt/myrepo
 sudo chmod -R a+rX /opt/myrepo
 ```
 
-## 7. Add repo dir to sources.list and apt update.
+## 7. Add repo dir to sources.list and apt update
 ```bash
 echo "deb [trusted=yes] file:///opt/myrepo ./" | sudo tee /etc/apt/sources.list.d/myrepo.list
 sudo apt update
 ```
 
-## 8. Create gzip archive for deployment. run in the root of your project directory.
+## 8. Create gzip archive for deployment. run in the root of your project directory
 ```bash
 tar czf myrepo_$(date +%Y%m%d).tar.gz -C / opt/myrepo
 ```
 
-## 9. Put your gzip archive into a project directory with any other files you'd like accessible in your offline machine. Then build your iso.
+## 9. Put your gzip archive into a project directory with any other files you'd like accessible in your offline machine. Then build your iso
 ```bash
 genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /path/to/project
 ```
 
-## 10. On your target machine, create your directories, extract your archive, set permissions, add your repo, then apt update.
+## 10. On your target machine, create your directories, extract your archive, set permissions, add your repo, then apt update
 ```bash
 sudo mkdir /opt
 sudo mkdir /opt/myrepo
@@ -71,9 +71,38 @@ I encountered a problem with two dependencies for VLC and discovered the issue w
 ## Aliases: Add these to your ~/.bashrc
 ```bash
 alias rebuildrepo='sudo dpkg-scanpackages . /dev/null | sudo tee Packages > /dev/null && sudo dpkg-scanpackages . /dev/null | gzip -9c | sudo tee Packages.gz > /dev/null'
-alias packiso='genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /project' # make iso containing myrepo.gz
 alias upgrades='sudo apt-get --download-only upgrade -y' # download packages for first update after installing ubuntu
+alias packiso='genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /project' # make iso containing myrepo.gz
 alias pack='sudo cp -u /var/cache/apt/archives/*.deb /opt/myrepo/'
+alias offline='sudo apt-get install --download-only'
+```
+## Usage examples:
+
+## rebuild package index in /opt/myrepo
+```bash
+cd /opt/myrepo
+rebuildrepo
+```
+
+## download all upgrade packages for caching
+```bash
+upgrades
+```
+
+## create ISO with repo archive
+```bash
+packiso
+```
+
+## copy newly downloaded .deb files into repo
+```bash
+pack
+```
+
+## download specific package(s) without installing
+```bash
+offline vlc
+offline curl wget
 ```
 
 ## Here's a brief walkthrough of adding code to `.bashrc` via nano:
