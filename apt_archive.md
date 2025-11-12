@@ -49,7 +49,7 @@ tar czf myrepo_$(date +%Y%m%d).tar.gz -C / opt/myrepo
 
 ## 9. Put your gzip archive into a project directory with any other files you'd like accessible in your offline machine. Then build your iso.
 ```bash
-genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /path/to/project'
+genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /path/to/project
 ```
 
 ## 10. On your target machine, create your directories, extract your archive, set permissions, add your repo, then apt update.
