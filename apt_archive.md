@@ -1,96 +1,118 @@
-1. Create the repo folder
+# Personal Ubuntu repository for offline use
 
-sudo mkdir -p /opt/myrepo
-sudo chown root:root /opt/myrepo
-sudo chmod a+rX /opt/myrepo
+## 1. Create your directories
+```bash
+sudo mkdir /opt
+sudo mkdir /opt/myrepo
+```
 
-
----
-
-2a. Download .debs for currently installed packages (optional)
-
-> Optional because default packages are already included in the Ubuntu live ISO.
-
-
-
-dpkg --get-selections | awk '{print $1}' | xargs sudo apt-get install --download-only -y
-
-
----
-
-2b. Download .debs for available upgrades
-
-> Ensures your offline repo includes post-install updates.
-
-
-
-sudo apt update
-sudo apt-get --download-only upgrade -y
-
-
----
-
-2c. Download .debs for additional single packages
-
-> Use this for packages not installed by default or upgrades you want pre-cached.
-
-
-
-sudo apt-get install --download-only <package-name>
-
-
----
-
-3. Copy .debs to repo folder
-
+## 2. Download packages into /var/cache/apt/archives/ and move to /opt/myrepo
+```bash
+sudo apt-get install [package] --download-only
 sudo cp -u /var/cache/apt/archives/*.deb /opt/myrepo/
-sudo chmod a+r /opt/myrepo/*.deb
+```
 
-
----
-
-4. Build Packages and Packages.gz indexes (with tee)
-
-cd /opt/myrepo
-
-# Uncompressed Packages
+## 3. Build indexs for your repo. Packages and Packages.gz must be capitalized
+```bash
 sudo dpkg-scanpackages . /dev/null | sudo tee Packages > /dev/null
-
-# Compressed Packages.gz
 sudo dpkg-scanpackages . /dev/null | gzip -9c | sudo tee Packages.gz > /dev/null
+```
 
-# Ensure readable by _apt
-sudo chmod a+r Packages Packages.gz
+## 4. If your Packages file is empty your repo will not work, check with:
+```bash
+cat Packages
+```
 
-> Important: filenames must be exactly Packages and Packages.gz.
+## 5. Clear /opt/myrepo if you need to start fresh
+```bash
+sudo rm -rf /opt/myrepo/*
+```
 
+## 6. Ensure permissions are correct. Do this for for Packges and Packages.gz each time you rebuild them.
+```bash
+sudo chmod a+r /opt/myrepo/*.deb
+sudo chmod a+r /opt/myrepo/Packages /opt/myrepo/Packages.gz
+sudo chown -R root:root /opt/myrepo
+sudo chmod -R a+rX /opt/myrepo
+```
 
-
-
----
-
-5. Add the local repo to APT
-
+## 7. Add repo dir to sources.list and apt update.
+```bash
 echo "deb [trusted=yes] file:///opt/myrepo ./" | sudo tee /etc/apt/sources.list.d/myrepo.list
 sudo apt update
+```
 
+## 8. Create gzip archive for deployment. run in the root of your project directory.
+```bash
+tar czf myrepo_$(date +%Y%m%d).tar.gz -C / opt/myrepo
+```
 
----
+## 9. Put your gzip archive into a project directory with any other files you'd like accessible in your offline machine. Then build your iso.
+```bash
+genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /path/to/project'
+```
 
-6. Test offline install and upgrade
+## 10. On your target machine, create your directories, extract your archive, set permissions, add your repo, then apt update.
+```bash
+sudo mkdir /opt
+sudo mkdir /opt/myrepo
+sudo tar xzf myrepo_*.tar.gz -C / # run this in the root of your cdrom or mounted iso.
+sudo chmod a+r /opt/myrepo/*.deb
+sudo chmod a+r /opt/myrepo/Packages /opt/myrepo/Packages.gz
+sudo chown -R root:root /opt/myrepo
+sudo chmod -R a+rX /opt/myrepo
+echo "deb [trusted=yes] file:///opt/myrepo ./" | sudo tee /etc/apt/sources.list.d/myrepo.list
+sudo apt update
+```
 
-sudo apt install vim
-sudo apt upgrade
+## Notes
+I encountered a problem with two dependencies for VLC and discovered the issue was that I had both the amd64 and i368 versions of these packages. The solution was to delete the i368 versions and keep only the packages for amd64, as my architecture is amd64.
 
+## Aliases: Add these to your ~/.bashrc
+```bash
+alias rebuildrepo='sudo dpkg-scanpackages . /dev/null | sudo tee Packages > /dev/null && sudo dpkg-scanpackages . /dev/null | gzip -9c | sudo tee Packages.gz > /dev/null'
+alias packiso='genisoimage -o "packages_$(date +%Y%m%d_%H%M%S).iso" -R -J /project' # make iso containing myrepo.gz
+alias upgrades='sudo apt-get --download-only upgrade -y' # download packages for first update after installing ubuntu
+alias pack='sudo cp -u /var/cache/apt/archives/*.deb /opt/myrepo/'
+```
 
----
+## Here's a brief walkthrough of adding code to `.bashrc` via nano:
 
-✅ Notes
+1. Open nano editor by running:
 
-Step 2a is optional if you already have the ISO-provided default packages.
+```bash
+nano ~/.bashrc
+````
 
-/opt/myrepo avoids _apt permission issues.
+2. Scroll to the bottom of the file.
 
-Using tee prevents “Permission denied” errors when writing Packages and Packages.gz.
+3. Add your new code on a new line, for example:
 
-Steps 2b–2c ensure upgrades and additional packages are available offline.
+```bash
+# New addition
+echo "Hello World"
+```
+
+4. Save and exit nano by pressing **Ctrl+X**, then **Y**, then **Enter**.
+
+5. Reload `.bashrc` to apply changes:
+
+```bash
+source ~/.bashrc
+```
+
+**Key points:**
+
+* `.bashrc` is a hidden file in your home directory (`~/.bashrc`)
+* Use `nano ~/.bashrc` to open/edit it
+* Add your new code at the end of the file
+* Save with **Ctrl+X**, then **Y**, then **Enter**
+* Reload with `source ~/.bashrc`
+
+It's recommended to backup `.bashrc` before making major changes:
+
+```bash
+cp ~/.bashrc ~/.bashrc.bak
+```
+
+This creates a copy named `.bashrc.bak` in the same directory.
