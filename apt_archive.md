@@ -57,7 +57,7 @@ sudo apt update
 sudo apt install vlc   # or anything in the kit
 ```
 
-Run Phase 1 once, then Phase 2 whenever you need a kit, then Phase 3 on the target. If you want this as `apt_offline_0001.md` with the term table, say so.
+Run Phase 1 once, then Phase 2 whenever you need a kit, then Phase 3 on the target.
 
 ## Original complex method
 
