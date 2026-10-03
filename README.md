@@ -4,7 +4,7 @@ Archiving system for APT and Python packages for offline use.
 
 [See apt_archive.md](apt_archive.md) for automatic APT archiving.
 
-Two methods
+Two methods for Python packages and projects
 - Archiving python libraries themselves via pip
 - Archiving per project or per one long requirements.txt file via UV, as UV creates a global content-addressed cache so you only need to download the collection once.
 
