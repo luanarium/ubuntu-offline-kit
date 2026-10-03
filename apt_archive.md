@@ -1,6 +1,6 @@
 # Personal Ubuntu repository for offline use
 
-(See original complex method)[original-complex-method]
+[See the original complex method here](#original-complex-method)
 
 ## new method using apt-cacher-ng
 
@@ -68,7 +68,7 @@ sudo apt install vlc   # or anything in the kit
 
 Run Phase 1 once, then Phase 2 whenever you need a kit, then Phase 3 on the target. If you want this as `apt_offline_0001.md` with the term table, say so.
 
-## original complex method
+## Original complex method
 
 ## 1. Create your directories
 ```bash
