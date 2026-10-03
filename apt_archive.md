@@ -1,5 +1,75 @@
 # Personal Ubuntu repository for offline use
 
+(See original complex method)[original-complex-method]
+
+## new method using apt-cacher-ng
+
+**Phase 1: Capture (once, on the source machine)**
+
+__If needed, enable universe repository for apt-cacher-ng__
+
+Almost certainly not. Ubuntu desktop and Linux Mint both ship with `universe` enabled by default. Check with:
+
+```
+apt-cache policy apt-cacher-ng
+```
+
+If it shows a candidate version, you're set. If it shows nothing, enable it:
+
+```
+sudo add-apt-repository universe
+sudo apt update
+```
+__Then__
+
+```
+sudo apt install apt-cacher-ng dpkg-dev
+echo 'Acquire::http::Proxy "http://localhost:3142";' | sudo tee /etc/apt/apt.conf.d/00proxy
+```
+Optionally, grab what's already installed so it's captured too:
+```
+dpkg-query -W -f='${Package}\n' | xargs sudo apt-get install --reinstall -d -y
+```
+
+Then use the machine normally. Every `apt install` or `upgrade` is now saved automatically.
+
+**Phase 2: Freeze (whenever you want a migration kit)**
+
+Create the script once:
+```
+sudo tee /usr/local/bin/freeze-repo >/dev/null <<'EOF'
+#!/bin/sh
+set -e
+R=/opt/myrepo
+mkdir -p $R
+find /var/cache/apt-cacher-ng -name '*.deb' -exec cp -un {} $R/ \;
+cd $R
+dpkg-scanpackages -a amd64 . /dev/null | gzip -9c > Packages.gz
+zcat Packages.gz > Packages
+chown -R root:root .; chmod -R a+rX .
+tar czf /opt/myrepo_$(date +%Y%m%d).tar.gz -C / opt/myrepo
+echo "Kit: /opt/myrepo_$(date +%Y%m%d).tar.gz"
+EOF
+sudo chmod +x /usr/local/bin/freeze-repo
+```
+Run it each time:
+```
+sudo freeze-repo
+```
+Copy the tarball from `/opt` to a USB stick. For an ISO instead: `genisoimage -o kit.iso -R -J /opt/myrepo_*.tar.gz`.
+
+**Phase 3: Restore (target machine, plain apt)**
+```
+sudo tar xzf myrepo_*.tar.gz -C /
+echo "deb [trusted=yes] file:///opt/myrepo ./" | sudo tee /etc/apt/sources.list.d/myrepo.list
+sudo apt update
+sudo apt install vlc   # or anything in the kit
+```
+
+Run Phase 1 once, then Phase 2 whenever you need a kit, then Phase 3 on the target. If you want this as `apt_offline_0001.md` with the term table, say so.
+
+## original complex method
+
 ## 1. Create your directories
 ```bash
 sudo mkdir /opt
