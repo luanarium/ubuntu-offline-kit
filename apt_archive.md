@@ -6,21 +6,12 @@
 
 **Phase 1: Capture (once, on the source machine)**
 
-__If needed, enable universe repository for apt-cacher-ng__
-
-Almost certainly not. Ubuntu desktop and Linux Mint both ship with `universe` enabled by default. Check with:
-
-```
-apt-cache policy apt-cacher-ng
-```
-
-If it shows a candidate version, you're set. If it shows nothing, enable it:
-
+If needed, enable universe repository for apt-cacher-ng
 ```
 sudo add-apt-repository universe
 sudo apt update
 ```
-__Then__
+Then
 
 ```
 sudo apt install apt-cacher-ng dpkg-dev
