@@ -1,4 +1,4 @@
-Archiving system for APT and Python packages for offline use.
+A portable, offline-ready archive of Ubuntu system packages and Python libraries.
 
 # Ubuntu-offline-kit
 
